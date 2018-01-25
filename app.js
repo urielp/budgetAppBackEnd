@@ -19,7 +19,7 @@ var app = express();
 mongoose.Promise=bluebird;
 mongoose.connect(config.database)
     .then(()=>{
-        console.log('Connection to mongo at db budget was succesfull')
+        console.log('Connection to mongo  at db budget was succesfull')
     })
     .catch(()=>{
         console.log('error while trying to connect to mongodb')

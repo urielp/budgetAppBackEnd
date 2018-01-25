@@ -26,6 +26,7 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
 exports.addExpenses = async function addExpenses(expense){
 
     let newExpense = new Expense({
+        name:expense.name,
         title:expense.title,
         amount:expense.amount,
         description:expense.description,
@@ -71,7 +72,7 @@ exports.updateExpense = async function updateExpense(expense){
     {
         return false;
     }
-
+    oldExpense.name=expense.name;
     oldExpense.title=expense.title;
     oldExpense.description=expense.description;
     oldExpense.amount=expense.amount;

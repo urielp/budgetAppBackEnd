@@ -23,6 +23,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
 exports.addExpenses = async function addExpenses(req,res,next){
 
     let newExpense = {
+        name:req.body.name,
         title:req.body.title,
         amount:req.body.amount,
         description:req.body.description,
@@ -66,6 +67,7 @@ exports.updateExpense = async function updateExpense(req,res,next){
 
     let expense ={
         id,
+        name:req.body.name?req.body.name:null,
         title:req.body.title?req.body.title:null,
         amount:req.body.amount?req.body.amount:null,
         description:req.body.description?req.body.description:null,
