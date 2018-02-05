@@ -22,6 +22,38 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
     }
 };
 
+//get expenses by month
+exports.getExpensesByMonth = async function getExpensesByMonth(month) {
+
+    try {
+        let expensesByDate = await Expense.aggregate([
+            {
+                $project:
+                    {
+                        doc: "$$ROOT",
+                        year: { $year: "$date" },
+                        month: { $month: "$date" },
+                        day: { $dayOfMonth: "$date" }
+                    }
+            },
+            {$match : { "month" : +month, "year": 2018 } }],(err,results) =>{
+                if(err){
+                    console.log(err);
+                    return;
+                }
+
+               return results;
+            }
+        );
+        console.log(expensesByDate);
+        return expensesByDate;
+    }
+
+    catch(exception) {
+        throw new Error('Error while trying to get expenses by month '+ exception.message);
+    }
+}
+
 //adding new expense
 exports.addExpenses = async function addExpenses(expense){
 

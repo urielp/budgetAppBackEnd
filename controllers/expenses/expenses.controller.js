@@ -19,6 +19,20 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
     }
 };
 
+//get Expenses by specific month
+exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
+    try {
+        console.log(req.params.month);
+        var month = req.params.month;
+        let expensesByMonth = await expensesService.getExpensesByMonth(month);
+
+        return res.status(200).json({success:true,data:expensesByMonth,message:'Successfully received expenses list by month'});
+    }
+
+    catch(excption) {
+        return res.status(400).json({success:false,data:{},message:excption.message});
+    }
+}
 //adding new expense
 exports.addExpenses = async function addExpenses(req,res,next){
 
