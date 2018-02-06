@@ -25,6 +25,8 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
 //adding new expense
 exports.addExpenses = async function addExpenses(expense){
 
+    console.log("adding to db:");
+    console.log(expense);
     let newExpense = new Expense({
         name:expense.name,
         title:expense.title,
@@ -36,6 +38,8 @@ exports.addExpenses = async function addExpenses(expense){
     try{
 
         let savedExpense = await newExpense.save();
+        console.log('new expenses!');
+        console.log(savedExpense);
         return savedExpense;
     }
 
