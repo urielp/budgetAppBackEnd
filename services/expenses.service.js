@@ -22,6 +22,68 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
     }
 };
 
+//get expenses by month
+exports.getExpensesByMonth = async function getExpensesByMonth(month) {
+
+    try {
+        let expensesByDate = await Expense.aggregate([
+            {
+                $project:
+                    {
+                        doc: "$$ROOT",
+                        year: { $year: "$date" },
+                        month: { $month: "$date" },
+                        day: { $dayOfMonth: "$date" }
+                    }
+            },
+            {$match : { "month" : +month, "year": 2018 } }],(err,results) =>{
+                if(err){
+                    console.log(err);
+                    return;
+                }
+
+               return results;
+            }
+        );
+        console.log(expensesByDate);
+        return expensesByDate;
+    }
+
+    catch(exception) {
+        throw new Error('Error while trying to get expenses by month '+ exception.message);
+    }
+}
+
+exports.getTotalAmountOfExpensesPerMonth = async function() {
+    try {
+
+        console.log('Total');
+        let totalExpensesPerMonth = await Expense.aggregate(
+            [
+                {
+                    $group:
+                        {
+                            _id: { month: { $month: "$date"}, year: { $year: "$date" } },
+                            totalAmount: { $sum: "$amount" },
+                            count: { $sum: 1 }
+                        }
+                }
+            ],(err,results) =>{
+                if(err){
+                    console.log(err);
+                    return err;
+                }
+                console.log(results);
+                return results;
+            }
+        )
+        return totalExpensesPerMonth;
+    }
+
+    catch (exception) {
+        throw new Error('Error while trying to get total expenses amount  by month '+ exception.message);
+    }
+}
 //adding new expense
 exports.addExpenses = async function addExpenses(expense){
 
