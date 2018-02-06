@@ -33,6 +33,19 @@ exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
         return res.status(400).json({success:false,data:{},message:excption.message});
     }
 }
+
+
+exports.getTotalExpensesAmountPerMonth = async function getTotalExpensesAmountPerMonth(req,res,next) {
+    try{
+        console.log('Total Controller');
+        let totalExpensesAmountByMonth = await expensesService.getTotalAmountOfExpensesPerMonth();
+        return res.status(200).json({success:true,data:totalExpensesAmountByMonth,message:'Successfully received total expenses per month list'})
+    }
+
+    catch(exception) {
+        return res.status(400).json({success:false,data:{},message:exception.message});
+    }
+}
 //adding new expense
 exports.addExpenses = async function addExpenses(req,res,next){
 
@@ -57,13 +70,14 @@ exports.addExpenses = async function addExpenses(req,res,next){
 //get expense details by id
 exports.getExpensesDetails = async function getExpensesDetails(req,res,next){
 
+
     if(!req.params.id){
         return res.status(400).json({success:false,data:{},message:'must send id!'})
     }
     var id = req.params.id;
     try{
         var requestedExpense = await expensesService.getExpensesDetails(id);
-        return res.status(200).json({success:true,data:requestedExpense,message:'expnse found'});
+        return res.status(200).json({success:true,data:requestedExpense,message:'expense found'});
     }
     catch (exception){
         return res.status(400).json({success:false,data:{},message:'error' + exception.message});

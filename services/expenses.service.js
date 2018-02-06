@@ -54,6 +54,36 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
     }
 }
 
+exports.getTotalAmountOfExpensesPerMonth = async function() {
+    try {
+
+        console.log('Total');
+        let totalExpensesPerMonth = await Expense.aggregate(
+            [
+                {
+                    $group:
+                        {
+                            _id: { month: { $month: "$date"}, year: { $year: "$date" } },
+                            totalAmount: { $sum: "$amount" },
+                            count: { $sum: 1 }
+                        }
+                }
+            ],(err,results) =>{
+                if(err){
+                    console.log(err);
+                    return err;
+                }
+                console.log(results);
+                return results;
+            }
+        )
+        return totalExpensesPerMonth;
+    }
+
+    catch (exception) {
+        throw new Error('Error while trying to get total expenses amount  by month '+ exception.message);
+    }
+}
 //adding new expense
 exports.addExpenses = async function addExpenses(expense){
 
