@@ -12,6 +12,7 @@ var config = require('./config/globalConfig');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var expenses = require('./routes/expenses');
+var bankAccounts = require('./routes/bankRoute');
 var app = express();
 
 
@@ -69,6 +70,7 @@ app.use('/', index);
 
 app.use('/users', users);
 app.use('/expenses',expenses);
+app.use('/banks',bankAccounts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

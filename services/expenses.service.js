@@ -56,8 +56,6 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
 
 exports.getTotalAmountOfExpensesPerMonth = async function() {
     try {
-
-        console.log('Total');
         let totalExpensesPerMonth = await Expense.aggregate(
             [
                 {
@@ -73,13 +71,11 @@ exports.getTotalAmountOfExpensesPerMonth = async function() {
                     console.log(err);
                     return err;
                 }
-                console.log(results);
                 return results;
             }
         )
         return totalExpensesPerMonth;
     }
-
     catch (exception) {
         throw new Error('Error while trying to get total expenses amount  by month '+ exception.message);
     }
