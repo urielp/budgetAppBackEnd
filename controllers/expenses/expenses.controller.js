@@ -49,14 +49,15 @@ exports.getTotalExpensesAmountPerMonth = async function getTotalExpensesAmountPe
 //adding new expense
 exports.addExpenses = async function addExpenses(req,res,next){
 
-    let newExpense = {
+/*    let newExpense = {
         name:req.body.name,
         title:req.body.title,
         amount:req.body.amount,
         description:req.body.description,
         date:new Date(),
         status:'N/A'
-    };
+    };*/
+let newExpense =req.body;
 
     try {
         let createdExpense = await expensesService.addExpenses(newExpense);
