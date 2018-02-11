@@ -27,6 +27,7 @@ exports.addBankAccount = async function addBankAccount(bank){
         bankName:bank.bankName,
         balance:bank.balance,
         description:bank.description,
+        code:bank.code
 
     });
     try{

@@ -5,7 +5,7 @@ var BankSchema =new mongoose.Schema({
     bankName:String,
     balance:Number,
     description:String,
-
+    code:String
 });
 
 BankSchema.plugin(mongoosePaginate);

@@ -23,6 +23,7 @@ exports.addBankAccount = async function getBankAccountsList(req,res,next){
         bankName:req.body.name,
         balance:req.body.balance,
         description:req.body.description,
+        code:req.body.code
 
     };
 

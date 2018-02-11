@@ -12,12 +12,37 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
 
     try {
         var expenses = await expensesService.getExpensesList({},page,limit);
+        for (let i =0 ;i<expenses.docs.length ; i++)
+        {
+            if(expenses.docs[i].date) {
+                console.log(new Date(formatDate(expenses.docs[i].date)).toLocaleDateString());
+                expenses.docs[i].date = new Date(formatDate(expenses.docs[i].date)).toDateString();
+                console.log(expenses.docs[i].date.toDateString());
+            }
+
+        }
         return res.status(200).json({success:true,data:expenses,message:'Successfully received expenses list'});
     }
     catch(exception){
         return res.status(400).json({success:false,data:{},message:exception.message});
     }
 };
+
+function formatDate(date)
+{
+    let dd = date.getDate();
+    let mm = date.getMonth() + 1;
+    const yyyy = date.getFullYear();
+
+    if (dd < 10) {
+        dd = +`0${dd}`;
+    }
+    if (mm < 10) {
+        mm = +`0${mm}`;
+    }
+
+    return dd + '/' + mm + '/' + yyyy;
+}
 
 //get Expenses by specific month
 exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
