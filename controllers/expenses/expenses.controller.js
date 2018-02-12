@@ -49,9 +49,19 @@ exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
     try {
 
         var month = req.params.month;
-        let expensesByMonth = await expensesService.getExpensesByMonth(month);
 
-        return res.status(200).json({success:true,data:expensesByMonth,message:'Successfully received expenses list by month'});
+        let expensesByMonth = await expensesService.getExpensesByMonth(month);
+        //if (expensesByMonth > 0)
+        console.log(expensesByMonth.length);
+        if (expensesByMonth.length > 0 ) {
+            console.log('pussy');
+            return res.status(200).json({
+                success: true,
+                data: expensesByMonth,
+                message: 'Successfully received expenses list by month'
+            });
+        }
+       return  res.status(200).json({success:true,data:{},message:'No results was found for the given month'});
     }
 
     catch(excption) {

@@ -5,7 +5,7 @@ _this = this;
 //getting expenses list
 exports.getExpensesList = async function getExpensesList(query,page,limit){
 
-    //mongos paginate settings
+    //mongoos paginate settings
 
     var options = {
         page,
@@ -21,6 +21,7 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
         throw new Error('Error while trying to get expenses '+ exception.message);
     }
 };
+
 
 //get expenses by month
 exports.getExpensesByMonth = async function getExpensesByMonth(month) {
@@ -42,10 +43,10 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
                     return;
                 }
 
-               return results;
+           return results;
             }
         );
-
+        
         return expensesByDate;
     }
 
@@ -56,6 +57,11 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
 
 exports.getTotalAmountOfExpensesPerMonth = async function() {
     try {
+
+        var options = {
+            page,
+            limit
+        }
         let totalExpensesPerMonth = await Expense.aggregate(
             [
                 {
