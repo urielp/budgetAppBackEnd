@@ -8,8 +8,11 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
 
     //setting the pagnitation of expenses list
     var page = req.query.page ? req.query.page:1;
-    var limit = req.query.limit ? req.query.limit:10;
+    var limit = req.query.limit ? req.query.limit:30;
 
+    let query = "{date: {$gt: ISODate('2018-01-01T00:00:00.000Z'),$lte: ISODate('2018-02-01T00:00:00.000Z')}}";
+
+    console.log(query);
     try {
         var expenses = await expensesService.getExpensesList({},page,limit);
         for (let i =0 ;i<expenses.docs.length ; i++)
