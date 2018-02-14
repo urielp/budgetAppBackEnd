@@ -15,9 +15,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
         for (let i =0 ;i<expenses.docs.length ; i++)
         {
             if(expenses.docs[i].date) {
-                console.log(new Date(formatDate(expenses.docs[i].date)).toLocaleDateString());
                 expenses.docs[i].date = new Date(formatDate(expenses.docs[i].date)).toDateString();
-                console.log(expenses.docs[i].date.toDateString());
             }
 
         }
