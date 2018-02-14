@@ -55,32 +55,68 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
     }
 }
 
-exports.getTotalAmountOfExpensesPerMonth = async function() {
+exports.getTotalAmountOfExpensesPerMonth = async function(month) {
     try {
+        //
+        // let options = {
+        //     page,
+        //     limit
+        // };
 
-        var options = {
-            page,
-            limit
+
+        console.log(month);
+        if(month === 0)
+        {
+            let totalExpensesPerMonth = await Expense.aggregate(
+                [
+                    {
+                        $group:
+                            {
+                                _id: { month: { $month: "$date"}, year: { $year: "$date" } },
+                                totalAmount: { $sum: "$amount" },
+                                count: { $sum: 1 }
+                            },
+                    }
+                ],(err,results) =>{
+                    if(err){
+                        return err;
+                    }
+                    return results;
+                }
+            );
+            console.log('pass query')
+            return totalExpensesPerMonth;
         }
+        else {
+
         let totalExpensesPerMonth = await Expense.aggregate(
             [
+
                 {
                     $group:
                         {
                             _id: { month: { $month: "$date"}, year: { $year: "$date" } },
                             totalAmount: { $sum: "$amount" },
                             count: { $sum: 1 }
-                        }
-                }
+
+                        },
+
+                },
+                {$match: {"_id.month": +month}}
             ],(err,results) =>{
                 if(err){
+                  
                     console.log(err);
                     return err;
                 }
+                console.log(results);
                 return results;
             }
-        )
-        return totalExpensesPerMonth;
+        );
+            return totalExpensesPerMonth;
+        }
+
+
     }
     catch (exception) {
         throw new Error('Error while trying to get total expenses amount  by month '+ exception.message);

@@ -73,7 +73,8 @@ exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
 exports.getTotalExpensesAmountPerMonth = async function getTotalExpensesAmountPerMonth(req,res,next) {
     try{
 
-        let totalExpensesAmountByMonth = await expensesService.getTotalAmountOfExpensesPerMonth();
+        let month = req.params.month;
+        let totalExpensesAmountByMonth = await expensesService.getTotalAmountOfExpensesPerMonth(+month);
         return res.status(200).json({success:true,data:totalExpensesAmountByMonth,message:'Successfully received total expenses per month list'})
     }
 

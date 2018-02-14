@@ -12,7 +12,8 @@ router.get('/',expensesController.getExpensesList)
     .get('/:id',expensesController.getExpensesDetails)
     //get an expenses by month
     .get('/month/:month',expensesController.getExpensesByMonth)
-    .get('/total/month',expensesController.getTotalExpensesAmountPerMonth)
+    // get total expenses amount by month
+    .get('/total/:month',expensesController.getTotalExpensesAmountPerMonth)
     //updating an expense
     .put('/update/:id',expensesController.updateExpense)
     //delete an expense
