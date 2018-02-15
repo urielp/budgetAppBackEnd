@@ -7,26 +7,29 @@ _this=this;
 exports.getExpensesList = async function getExpensesList(req,res,next){
 
     //setting the pagnitation of expenses list
-    var page = req.query.page ? req.query.page:1;
-    var limit = req.query.limit ? req.query.limit:30;
+    let page = req.query.page ? req.query.page:1;
+    let limit = req.query.limit ? req.query.limit:10;
+let d = new Date();
+    //Date:
+    //Default:from start of current month ,year , day
+    let fromYear = req.query.fromYear ? req.query.fromYear:d.getFullYear();
+    let fromMonth = req.query.fromMonth ? req.query.fromMonth:d.getMonth()+1;
+    let fromDay = req.query.fromDay ? req.query.fromDay:'1';
 
-    //Date
-    let year = req.query.year ? req.query.year:new Date().getFullYear();
-    let month = req.query.month ? req.query.month:new Date().getMonth();
-    let day = req.query.day ? req.query.day:new Date().getDay();
-
-
+    // until the current day,month,year
+    let toDay = req.query.toDay ? req.query.toDay:d.getDate();
+    let toYear = req.query.toYear ? req.query.toYear:d.getFullYear();
+    let toMonth = req.query.toMonth ? req.query.toMonth:d.getMonth()+1;
     //TODO: make the day,year,month parameter instead of fixed value
     let query = {
                   "date" :
-                      { "$lt" :new Date("2018-02-24T00:16:15.184Z"),
-                        "$gte" :new Date("2018-01-01T00:16:15.184Z")
+                      { "$lt" :new Date(toYear+"-"+toMonth+"-"+toDay),//current date
+                        "$gte" :new Date(fromYear+"-"+fromMonth+"-"+fromDay)
                       }
                 };
-
-    console.log(query);
+console.log(query);
     try {
-        var expenses = await expensesService.getExpensesList(query,page,limit);
+        let expenses = await expensesService.getExpensesList(query,page,limit);
         for (let i =0 ;i<expenses.docs.length ; i++)
         {
             if(expenses.docs[i].date) {
@@ -61,7 +64,7 @@ function formatDate(date)
 exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
     try {
 
-        var month = req.params.month;
+        let month = req.params.month;
 
         let expensesByMonth = await expensesService.getExpensesByMonth(month);
         //if (expensesByMonth > 0)
