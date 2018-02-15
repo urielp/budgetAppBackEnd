@@ -13,6 +13,7 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
     }
 
     try{
+
         let expenses = await Expense.paginate(query,options);
         return expenses;
     }
@@ -191,7 +192,7 @@ exports.updateExpense = async function updateExpense(expense){
 
 };
 
-
+// removing an expense by id
 exports.deleteExpense = async function deleteExpense(id){
 
     try{

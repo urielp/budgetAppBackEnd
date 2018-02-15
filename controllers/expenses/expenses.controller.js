@@ -10,11 +10,23 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
     var page = req.query.page ? req.query.page:1;
     var limit = req.query.limit ? req.query.limit:30;
 
-    let query = "{date: {$gt: ISODate('2018-01-01T00:00:00.000Z'),$lte: ISODate('2018-02-01T00:00:00.000Z')}}";
+    //Date
+    let year = req.query.year ? req.query.year:new Date().getFullYear();
+    let month = req.query.month ? req.query.month:new Date().getMonth();
+    let day = req.query.day ? req.query.day:new Date().getDay();
+
+
+    //TODO: make the day,year,month parameter instead of fixed value
+    let query = {
+                  "date" :
+                      { "$lt" :new Date("2018-02-24T00:16:15.184Z"),
+                        "$gte" :new Date("2018-01-01T00:16:15.184Z")
+                      }
+                };
 
     console.log(query);
     try {
-        var expenses = await expensesService.getExpensesList({},page,limit);
+        var expenses = await expensesService.getExpensesList(query,page,limit);
         for (let i =0 ;i<expenses.docs.length ; i++)
         {
             if(expenses.docs[i].date) {
