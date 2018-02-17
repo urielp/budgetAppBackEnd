@@ -2,6 +2,7 @@ var Expense =require ('../models/expenses.model');
 
 _this = this;
 
+
 //getting expenses list
 exports.getExpensesList = async function getExpensesList(query,page,limit){
 
@@ -13,7 +14,7 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
     }
 
     try{
-
+        console.log(query);
         let expenses = await Expense.paginate(query,options);
         return expenses;
     }
@@ -205,4 +206,6 @@ exports.deleteExpense = async function deleteExpense(id){
     catch(exception){
         throw new Error("error while trying to delete expense from db" + exception.message);
     }
+
+
 };

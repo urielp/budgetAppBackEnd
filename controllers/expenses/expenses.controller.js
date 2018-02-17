@@ -2,41 +2,81 @@ var expensesService = require('../../services/expenses.service');
 
 
 _this=this;
-
+function getLastDayOfMonth(requestedMonth){
+    const month = requestedMonth; // January
+    const d = new Date(2008, month, 0);
+    console.log(d.getDate());
+    return d.getDate();
+}
 //getting the expenses list from exepensesService
 exports.getExpensesList = async function getExpensesList(req,res,next){
 
-    //setting the pagnitation of expenses list
-    let page = req.query.page ? req.query.page:1;
-    let limit = req.query.limit ? req.query.limit:10;
-let d = new Date();
-    //Date:
-    //Default:from start of current month ,year , day
-    let fromYear = req.query.fromYear ? req.query.fromYear:d.getFullYear();
-    let fromMonth = req.query.fromMonth ? req.query.fromMonth:d.getMonth()+1;
-    let fromDay = req.query.fromDay ? req.query.fromDay:'1';
+    let d = new Date();
+    var query ="";
 
-    // until the current day,month,year
-    let toDay = req.query.toDay ? req.query.toDay:d.getDate();
-    let toYear = req.query.toYear ? req.query.toYear:d.getFullYear();
-    let toMonth = req.query.toMonth ? req.query.toMonth:d.getMonth()+1;
-    //TODO: make the day,year,month parameter instead of fixed value
-    let query = {
-                  "date" :
-                      { "$lt" :new Date(toYear+"-"+toMonth+"-"+toDay),//current date
-                        "$gte" :new Date(fromYear+"-"+fromMonth+"-"+fromDay)
-                      }
-                };
-console.log(query);
-    try {
-        let expenses = await expensesService.getExpensesList(query,page,limit);
-        for (let i =0 ;i<expenses.docs.length ; i++)
-        {
-            if(expenses.docs[i].date) {
-                expenses.docs[i].date = new Date(formatDate(expenses.docs[i].date)).toDateString();
+        //setting the pagnitation of expenses list
+        let page = req.query.page ? req.query.page : 1;
+        let limit = req.query.limit ? req.query.limit : 10;
+        if(req.params.month != undefined) {
+            if (req.params.month != d.getMonth() + 1) {
+                console.log('not the same ');
+                let fromDay = req.query.fromDay ? req.query.fromDay : 1;
+                let fromMonth = req.params.month;
+                let fromYear = req.query.fromYear ? req.query.fromYear : d.getFullYear();
+
+                // until the current day,month,year
+                let toDay = getLastDayOfMonth(req.params.month);
+                let toMonth = req.params.month;
+                let toYear = req.query.toYear ? req.query.toYear : d.getFullYear();
+
+
+                query = {
+                    "date": {
+                        $gte: new Date("2018-01-01")
+                    }
+                    ,
+                    $and: [
+                        {
+                            "date": {
+                                $lte: new Date("2018-01-31")
+                            }
+                        }
+                    ]
+                }
             }
 
+            else {
+                //Date:
+                //Default:from start of current month ,year , day
+                let fromYear = req.query.fromYear ? req.query.fromYear : d.getFullYear();
+                let fromMonth = req.query.fromMonth ? req.query.fromMonth : d.getMonth() + 1;
+                let fromDay = req.query.fromDay ? req.query.fromDay : '1';
+
+                // until the current day,month,year
+                let toDay = +req.query.toDay ? req.query.toDay : d.getDate();
+                let toYear = req.query.toYear ? req.query.toYear : d.getFullYear();
+                let toMonth = req.query.toMonth ? req.query.toMonth : d.getMonth() + 1;
+                //TODO: make the day,year,month parameter instead of fixed value
+                query =
+                    {
+                        "date": {
+                            "$gte": new Date(fromYear + "-" + fromMonth + "-" + fromDay)
+                        }
+                        ,
+                        $and: [
+                            {
+                                "date": {
+                                    "$lte": new Date()
+                                }
+                            }
+                        ]
+                    }
+
+            }
         }
+    try {
+        let expenses = await expensesService.getExpensesList(query,page,limit);
+
         return res.status(200).json({success:true,data:expenses,message:'Successfully received expenses list'});
     }
     catch(exception){
