@@ -8,6 +8,9 @@ function getLastDayOfMonth(requestedMonth){
     console.log(d.getDate());
     return d.getDate();
 }
+
+
+
 //getting the expenses list from exepensesService
 exports.getExpensesList = async function getExpensesList(req,res,next){
 
@@ -18,8 +21,8 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
         let page = req.query.page ? req.query.page : 1;
         let limit = req.query.limit ? req.query.limit : 10;
         if(req.params.month != undefined) {
+
             if (req.params.month != d.getMonth() + 1) {
-                console.log('not the same ');
                 let fromDay = req.query.fromDay ? req.query.fromDay : 1;
                 let fromMonth = req.params.month;
                 let fromYear = req.query.fromYear ? req.query.fromYear : d.getFullYear();
@@ -28,23 +31,20 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                 let toDay = getLastDayOfMonth(req.params.month);
                 let toMonth = req.params.month;
                 let toYear = req.query.toYear ? req.query.toYear : d.getFullYear();
-
-
                 query = {
                     "date": {
-                        $gte: new Date("2018-01-01")
+                        $gte: new Date("2018-"+(+fromMonth)+"-01")
                     }
                     ,
                     $and: [
                         {
                             "date": {
-                                $lte: new Date("2018-01-31")
+                                $lte: new Date("2018-"+fromMonth+"-31")
                             }
                         }
                     ]
                 }
             }
-
             else {
                 //Date:
                 //Default:from start of current month ,year , day
@@ -74,6 +74,12 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
 
             }
         }
+
+        else if(req.body.from  && req.body.to)
+        {
+            console.log('body ')
+        }
+
     try {
         let expenses = await expensesService.getExpensesList(query,page,limit);
 
@@ -83,6 +89,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
         return res.status(400).json({success:false,data:{},message:exception.message});
     }
 };
+
 
 function formatDate(date)
 {

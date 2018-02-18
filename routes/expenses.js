@@ -5,8 +5,9 @@ var expensesController = require('../controllers/expenses/expenses.controller');
 var router = express.Router();
 
 //expnses list
-router.get('/expensesList/:month',expensesController.getExpensesList)
-    .get('/expensesList/',expensesController.getExpensesList)
+router.get('/expensesList/',expensesController.getExpensesList)
+    .get('/expensesList/:month',expensesController.getExpensesList)
+    .get('/expensesList/range',expensesController.getExpensesList)
     //add new expense
     .post('/',expensesController.addExpenses)
     //get an expense by id
