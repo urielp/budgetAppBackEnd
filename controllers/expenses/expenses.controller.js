@@ -35,7 +35,6 @@ console.log(query);
             if(expenses.docs[i].date) {
                 expenses.docs[i].date = new Date(formatDate(expenses.docs[i].date)).toDateString();
             }
-
         }
         return res.status(200).json({success:true,data:expenses,message:'Successfully received expenses list'});
     }
@@ -63,14 +62,9 @@ function formatDate(date)
 //get Expenses by specific month
 exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
     try {
-
         let month = req.params.month;
-
         let expensesByMonth = await expensesService.getExpensesByMonth(month);
-        //if (expensesByMonth > 0)
-        console.log(expensesByMonth.length);
         if (expensesByMonth.length > 0 ) {
-            console.log('pussy');
             return res.status(200).json({
                 success: true,
                 data: expensesByMonth,
@@ -79,7 +73,6 @@ exports.getExpensesByMonth = async function getExpensesByMonth(req,res,next) {
         }
        return  res.status(200).json({success:true,data:{},message:'No results was found for the given month'});
     }
-
     catch(excption) {
         return res.status(400).json({success:false,data:{},message:excption.message});
     }
