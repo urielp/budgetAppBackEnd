@@ -14,7 +14,7 @@ exports.getExpensesList = async function getExpensesList(query,page,limit){
     }
 
     try{
-        console.log(query);
+       console.log(query);
         let expenses = await Expense.paginate(query,options);
         return expenses;
     }
@@ -57,7 +57,7 @@ exports.getExpensesByMonth = async function getExpensesByMonth(month) {
     }
 }
 
-exports.getTotalAmountOfExpensesPerMonth = async function(month) {
+exports.getTotalAmountOfExpensesPerMonth = async function(month,year) {
     try {
         //
         // let options = {
@@ -66,8 +66,7 @@ exports.getTotalAmountOfExpensesPerMonth = async function(month) {
         // };
 
 
-        console.log(month);
-        if(month === 0)
+       if(month === 0)
         {
             let totalExpensesPerMonth = await Expense.aggregate(
                 [
@@ -104,7 +103,7 @@ exports.getTotalAmountOfExpensesPerMonth = async function(month) {
                         },
 
                 },
-                {$match: {"_id.month": +month}}
+                {$match: {$and:[{"_id.year":year},{"_id.month":month}]}}
             ],(err,results) =>{
                 if(err){
                   
