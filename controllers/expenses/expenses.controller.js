@@ -4,19 +4,23 @@ var expensesService = require('../../services/expenses.service');
 _this=this;
 function getLastDayOfMonth(requestedMonth){
     const month = requestedMonth; // January
-    const d = new Date(2008, month, 0);
+    const d = new Date(2018, month, 0);
 
     return d.getDate();
 }
 
-
+function getFirstDayOfMonth(requestedMonth)
+{
+    var date = new Date();
+    return new Date(date.getFullYear(),requestedMonth+1,2);
+}
 
 //getting the expenses list from exepensesService
 exports.getExpensesList = async function getExpensesList(req,res,next){
 
     let d = new Date();
     var query ="";
-
+    var query2="";
         //setting the pagnitation of expenses list
         let page = req.query.page ? req.query.page : 1;
         let limit = req.query.limit ? req.query.limit : 10;
@@ -31,9 +35,17 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                 let toDay = +getLastDayOfMonth(req.params.month);
                 let toMonth = +req.params.month;
                 let toYear = +req.query.toYear ? +req.query.toYear : +d.getFullYear();
-                query = {
+                query2 = {
+                    "date":
+                        {
+                            "$gte": new Date(d.getFullYear(),fromMonth-1,2),
+                            "$lt":  new Date(2018, fromMonth, 1)//new Date(fromYear+"-"+fromMonth+"-"+getLastDayOfMonth(fromMonth))
+                        }
+                };
+
+                    query = {
                     "date": {
-                        $gte: new Date(fromYear+"-"+(+fromMonth)+"-01")
+                        $gte:new Date(d.getFullYear(),fromMonth-1,2) //new Date(fromYear+"-"+(+fromMonth)+"-01")
                     }
                     ,
                     $and: [
@@ -43,7 +55,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                             }
                         }
                     ]
-                }
+                };
             }
             else {
                 //Date:
@@ -56,21 +68,31 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                 let toDay = +req.query.toDay ? +req.query.toDay : +d.getDate();
                 let toYear = +req.query.toYear ? +req.query.toYear : +d.getFullYear();
                 let toMonth = +req.query.toMonth ? +req.query.toMonth : +d.getMonth() + 1;
-                //TODO: make the day,year,month parameter instead of fixed value
+
+                query2 = {
+                    "date":
+                        {
+                            "$gte": new Date(d.getFullYear(),fromMonth-1,2),
+                            "$lt":  new Date()//new Date(fromYear+"-"+fromMonth+"-"+getLastDayOfMonth(fromMonth))
+                        }
+                };
+
                 query =
                     {
                         "date": {
-                            "$gte": new Date(fromYear + "-" + fromMonth + "-" + fromDay)
+                            "$gte": new Date(fromYear + "-" + fromMonth + "-" + fromDay+"T00:00:00Z")
                         }
                         ,
                         $and: [
                             {
                                 "date": {
-                                    "$lte": new Date(toYear + "-" + toMonth + "-" +getLastDayOfMonth(fromMonth))
+                                    "$lte": new Date(toYear + "-" + toMonth + "-" +getLastDayOfMonth(fromMonth)+"T00:00:00Z")
                                 }
                             }
                         ]
                     }
+
+                    console.log(query2);
 
             }
         }
@@ -81,7 +103,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
         }
 
     try {
-        let expenses = await expensesService.getExpensesList(query,page,limit);
+        let expenses = await expensesService.getExpensesList(query2,page,limit);
 
         return res.status(200).json({success:true,data:expenses,message:'Successfully received expenses list'});
     }
