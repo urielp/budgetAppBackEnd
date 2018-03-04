@@ -7,7 +7,8 @@ var ExpenseSchema =new mongoose.Schema({
     amount:Number,
     description:String,
     date:Date,
-    status:String
+    status:String,
+    _id:String
 });
 
 ExpenseSchema.plugin(mongoosePaginate);
