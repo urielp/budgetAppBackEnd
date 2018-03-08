@@ -1,5 +1,5 @@
 var Expense =require ('../models/expenses.model');
-
+var mongoose = require('mongoose');
 _this = this;
 
 
@@ -195,16 +195,32 @@ exports.updateExpense = async function updateExpense(expense){
 // removing an expense by id
 exports.deleteExpense = async function deleteExpense(id){
 
-    try{
-        let deletedExpense = await Expense.remove({_id:id});
-        if(deletedExpense.n===0 ){
-            throw new Error("Expense could not be deleted" );
-        }
-        return deletedExpense;
+    // try{
+    //     let deletedExpense = await Expense.findByIdAndRemove(id,function (err,expense) {
+    //         if(err){
+    //             console.log(err);
+    //         }
+    //         else
+    //             console.log('Yay');
+    //             console.log(expense);
+    //     });
+    //     if(deletedExpense.n===0 ){
+    //         throw new Error("Expense could not be deleted" );
+    //     }
+    //     return deletedExpense;
+    // }
+    // catch(exception){
+    //     throw new Error("error while trying to delete expense from db" + exception.message);
+    // }
+
+    try {
+       let temp =  await Expense.remove({ _id:new mongoose.mongo.ObjectID(id) }, function (err) {
+            if (err) return err;
+            // removed!
+        });
+       return temp;
     }
     catch(exception){
-        throw new Error("error while trying to delete expense from db" + exception.message);
+        throw new Error("Error while trying to find expense in db due to : "+exception.message);
     }
-
-
 };

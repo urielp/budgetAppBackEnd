@@ -42,7 +42,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                             "$lt":  new Date(2018, fromMonth, 1)//new Date(fromYear+"-"+fromMonth+"-"+getLastDayOfMonth(fromMonth))
                         }
                 };
-
+                console.log(query2);
                     query = {
                     "date": {
                         $gte:new Date(d.getFullYear(),fromMonth-1,2) //new Date(fromYear+"-"+(+fromMonth)+"-01")
@@ -92,7 +92,7 @@ exports.getExpensesList = async function getExpensesList(req,res,next){
                         ]
                     }
 
-                    console.log(query2);
+
 
             }
         }
